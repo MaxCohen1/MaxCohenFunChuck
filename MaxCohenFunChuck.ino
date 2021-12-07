@@ -19,8 +19,8 @@ int pitchValue = 0;
 
 void setup() {
   Serial.begin(9600);
-  pinMode(rollButtonPin,INPUT);
-  pinMode(pitchButtonPin,INPUT);
+  pinMode(rollButtonPin, INPUT);
+  pinMode(pitchButtonPin, INPUT);
   nunchuck1.begin();
   nunchuck1.type = NUNCHUCK;
 }
@@ -55,6 +55,7 @@ void checkZ() {
   if (nunchuck1.values[10] == 255) {
     checkRoll();
     checkPitch();
+  }
 }
 
 void checkRoll() {
@@ -101,11 +102,11 @@ void checkJoystickX() {
   }
 }
 
-void setEffects(){
-  if (digitalRead(rollButtonPin)==HIGH){
+void setEffects() {
+  if (digitalRead(rollButtonPin) == HIGH) {
     usbMIDI.sendControlChange(1, rollValue, 0);
   }
-  if (digitalRead(pitchButtonPin)==HIGH){
+  if (digitalRead(pitchButtonPin) == HIGH) {
     usbMIDI.sendControlChange(2, pitchValue, 0);
   }
 }
