@@ -5,6 +5,7 @@ Accessory nunchuck1;
 bool cState = LOW;
 bool lastCState = LOW;
 int midiValue = 60;
+int lastMidiValue = 60;
 
 int joyYState = 127;
 int lastJoyYState = 127;
@@ -82,11 +83,19 @@ void checkJoystickY() {
   lastJoyYState = joyYState;
   joyYState = nunchuck1.values[1];
   if ((joyYState == 255) and (lastJoyYState != joyYState)) {
-    usbMIDI.sendNoteOff(midiValue, 0, 1);
+    lastMidiValue = midiValue;
     midiValue = midiValue + 1;
+    if (cState == HIGH) {
+      usbMIDI.sendNoteOn(midiValue, 127, 1);
+      usbMIDI.sendNoteOff(lastMidiValue, 0, 1);
+    }
   } else if ((joyYState == 0) and (lastJoyYState != joyYState)) {
-    usbMIDI.sendNoteOff(midiValue, 0, 1);
+    lastMidiValue = midiValue;
     midiValue = midiValue - 1;
+    if (cState == HIGH) {
+      usbMIDI.sendNoteOn(midiValue, 127, 1);
+      usbMIDI.sendNoteOff(lastMidiValue, 0, 1);
+    }
   }
 }
 
@@ -94,11 +103,19 @@ void checkJoystickX() {
   lastJoyXState = joyXState;
   joyXState = nunchuck1.values[0];
   if ((joyXState == 255) and (lastJoyXState != joyXState)) {
-    usbMIDI.sendNoteOff(midiValue, 0, 1);
+    lastMidiValue = midiValue;
     midiValue = midiValue + 12;
+    if (cState == HIGH) {
+      usbMIDI.sendNoteOn(midiValue, 127, 1);
+      usbMIDI.sendNoteOff(lastMidiValue, 0, 1);
+    }
   } else if ((joyXState == 0) and (lastJoyXState != joyXState)) {
-    usbMIDI.sendNoteOff(midiValue, 0, 1);
+    lastMidiValue = midiValue;
     midiValue = midiValue - 12;
+    if (cState == HIGH) {
+      usbMIDI.sendNoteOn(midiValue, 127, 1);
+      usbMIDI.sendNoteOff(lastMidiValue, 0, 1);
+    }
   }
 }
 
