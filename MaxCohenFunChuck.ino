@@ -16,7 +16,14 @@ int rollButtonPin = 31;
 int pitchButtonPin = 32;
 
 int rollValue = 0;
+int rollStep = 0;
+int rollCount = 0;
+int rollTotal = 0;
+
 int pitchValue = 0;
+int pitchStep = 0;
+int pitchCount = 0;
+int pitchTotal = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -60,23 +67,37 @@ void checkZ() {
 }
 
 void checkRoll() {
-  rollValue = map(nunchuck1.values[4], 68, 180, 0, 127);
-  if (rollValue > 127) {
-    rollValue = 127;
-  } else if (rollValue < 0) {
-    rollValue = 0;
+  rollStep = map(nunchuck1.values[4], 68, 180, 0, 127);
+  if (rollStep > 127) {
+    rollStep = 127;
+  } else if (rollStep < 0) {
+    rollStep = 0;
   }
-  usbMIDI.sendControlChange(1, rollValue, 0);
+  rollTotal = rollTotal + rollStep;
+  rollCount = rollCount + 1;
+  if (rollCount >= 10) {
+    rollValue = (rollTotal / 10);
+    rollCount = 0;
+    rollTotal = 0;
+    usbMIDI.sendControlChange(1, rollValue, 0);
+  }
 }
 
 void checkPitch() {
-  pitchValue = map(nunchuck1.values[5], 65, 180, 0, 127);
-  if (pitchValue > 127) {
-    pitchValue = 127;
-  } else if (pitchValue < 0) {
-    pitchValue = 0;
+  pitchStep = map(nunchuck1.values[5], 65, 180, 0, 127);
+  if (pitchStep > 127) {
+    pitchStep = 127;
+  } else if (pitchStep < 0) {
+    pitchStep = 0;
   }
-  usbMIDI.sendControlChange(2, pitchValue, 0);
+  pitchTotal = pitchTotal + pitchStep;
+  pitchCount = pitchCount + 1;
+  if (pitchCount >= 10) {
+    pitchValue = (pitchTotal / 10);
+    pitchCount = 0;
+    pitchTotal = 0;
+    usbMIDI.sendControlChange(2, pitchValue, 0);
+  }
 }
 
 void checkJoystickY() {
