@@ -15,6 +15,9 @@ int lastJoyXState = 127;
 int rollButtonPin = 31;
 int pitchButtonPin = 32;
 
+int xValueSwitch = 30;
+int xValue = 12;
+
 int rollValue = 0;
 int rollStep = 0;
 int rollCount = 0;
@@ -29,6 +32,7 @@ void setup() {
   Serial.begin(9600);
   pinMode(rollButtonPin, INPUT);
   pinMode(pitchButtonPin, INPUT);
+  pinMode(xValueSwitch, INPUT);
   nunchuck1.begin();
   nunchuck1.type = NUNCHUCK;
 }
@@ -121,22 +125,31 @@ void checkJoystickY() {
 }
 
 void checkJoystickX() {
+  checkXValueSwitch();
   lastJoyXState = joyXState;
   joyXState = nunchuck1.values[0];
   if ((joyXState == 255) and (lastJoyXState != joyXState)) {
     lastMidiValue = midiValue;
-    midiValue = midiValue + 12;
+    midiValue = midiValue + xValue;
     if (cState == HIGH) {
       usbMIDI.sendNoteOn(midiValue, 127, 1);
       usbMIDI.sendNoteOff(lastMidiValue, 0, 1);
     }
   } else if ((joyXState == 0) and (lastJoyXState != joyXState)) {
     lastMidiValue = midiValue;
-    midiValue = midiValue - 12;
+    midiValue = midiValue - xValue;
     if (cState == HIGH) {
       usbMIDI.sendNoteOn(midiValue, 127, 1);
       usbMIDI.sendNoteOff(lastMidiValue, 0, 1);
     }
+  }
+}
+
+void checkXValueSwitch() {
+  if (digitalRead(xValueSwitch) == HIGH) {
+    xValue = 2;
+  } else {
+    xValue = 12;
   }
 }
 
