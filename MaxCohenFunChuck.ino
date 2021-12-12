@@ -47,7 +47,7 @@ void loop() {
   setEffects();
 }
 
-void checkC() {
+void checkC() { //Play notes if C is held down
   lastCState = cState;
   if (nunchuck1.values[11] == 0) {
     cState = LOW;
@@ -63,7 +63,7 @@ void checkC() {
   }
 }
 
-void checkZ() {
+void checkZ() { //checks if z button is held down, and calls functions to change effects
   if (nunchuck1.values[10] == 255) {
     checkRoll();
     checkPitch();
@@ -71,7 +71,7 @@ void checkZ() {
 }
 
 void checkRoll() {
-  rollStep = map(nunchuck1.values[4], 68, 180, 0, 127);
+  rollStep = map(nunchuck1.values[4], 68, 180, 0, 127); //converts tilt data to midi range
   if (rollStep > 127) {
     rollStep = 127;
   } else if (rollStep < 0) {
@@ -79,7 +79,7 @@ void checkRoll() {
   }
   rollTotal = rollTotal + rollStep;
   rollCount = rollCount + 1;
-  if (rollCount >= 10) {
+  if (rollCount >= 10) { //uses an average of ten for smoothness
     rollValue = (rollTotal / 10);
     rollCount = 0;
     rollTotal = 0;
@@ -87,7 +87,7 @@ void checkRoll() {
   }
 }
 
-void checkPitch() {
+void checkPitch() { //identical to checkRoll, just for the other tilt direction
   pitchStep = map(nunchuck1.values[5], 65, 180, 0, 127);
   if (pitchStep > 127) {
     pitchStep = 127;
@@ -108,7 +108,7 @@ void checkJoystickY() {
   lastJoyYState = joyYState;
   joyYState = nunchuck1.values[1];
   if ((joyYState == 255) and (lastJoyYState != joyYState)) {
-    lastMidiValue = midiValue;
+    lastMidiValue = midiValue; //changes note before turning off previous note for smooth playing
     midiValue = midiValue + 1;
     if (cState == HIGH) {
       usbMIDI.sendNoteOn(midiValue, 127, 1);
@@ -125,7 +125,7 @@ void checkJoystickY() {
 }
 
 void checkJoystickX() {
-  checkXValueSwitch();
+  checkXValueSwitch(); //Mostly the same as for the y direction, except it also checks the switch to determine how much to change by
   lastJoyXState = joyXState;
   joyXState = nunchuck1.values[0];
   if ((joyXState == 255) and (lastJoyXState != joyXState)) {
@@ -153,7 +153,7 @@ void checkXValueSwitch() {
   }
 }
 
-void setEffects() {
+void setEffects() { //the code for the buttons to set effect parameters. Allows you to send in the control paths one at a time.
   if (digitalRead(rollButtonPin) == HIGH) {
     usbMIDI.sendControlChange(1, rollValue, 0);
   }
