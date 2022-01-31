@@ -40,8 +40,6 @@ void loop() {
 void checkLeftX() {
   leftJoyX = nunchuck1.values[0];
   if (leftJoyX != lastLeftJoyX) {
-    Serial.println("Left Joy X");
-    Serial.println(leftJoyX);
   }
   lastLeftJoyX = leftJoyX;
 }
@@ -49,8 +47,6 @@ void checkLeftX() {
 void checkLeftY() {
   leftJoyY = nunchuck1.values[1];
   if (leftJoyY != lastLeftJoyY) {
-    Serial.println("Left Joy Y");
-    Serial.println(leftJoyY);
   }
   lastLeftJoyY = leftJoyY;
 }
@@ -58,8 +54,6 @@ void checkLeftY() {
 void checkRightX() {
   rightJoyX = nunchuck1.values[2];
   if (rightJoyX != lastRightJoyX) {
-    Serial.println("Right Joy X");
-    Serial.println(rightJoyX);
   }
   lastRightJoyX = rightJoyX;
 }
@@ -67,8 +61,6 @@ void checkRightX() {
 void checkRightY() {
   rightJoyY = nunchuck1.values[3];
   if (rightJoyY != lastRightJoyY) {
-    Serial.println("Right Joy Y");
-    Serial.println(rightJoyY);
   }
   lastRightJoyY = rightJoyY;
 }
@@ -76,7 +68,12 @@ void checkRightY() {
 void checkXButton() {
   xButton = nunchuck1.values[8];
   if (xButton == 255 and xButton != lastXButton) {
-    Serial.println("X Button On");
+    usbMIDI.sendNoteOn(36, 127, 1);
+    delay(5);
+  }
+  if (xButton == 0 and xButton != lastXButton) {
+    usbMIDI.sendNoteOff(36, 127, 1);
+    delay(5);
   }
   lastXButton = xButton;
 }
@@ -84,7 +81,12 @@ void checkXButton() {
 void checkYButton() {
   yButton = nunchuck1.values[9];
   if (yButton == 255 and yButton != lastYButton) {
-    Serial.println("Y Button On");
+    usbMIDI.sendNoteOn(37, 127, 1);
+    delay(5);
+  }
+  if (yButton == 0 and yButton != lastYButton) {
+    usbMIDI.sendNoteOff(37, 127, 1);
+    delay(5);
   }
   lastYButton = yButton;
 }
@@ -92,7 +94,12 @@ void checkYButton() {
 void checkAButton() {
   aButton = nunchuck1.values[12];
   if (aButton == 255 and aButton != lastAButton) {
-    Serial.println("A Button On");
+    usbMIDI.sendNoteOn(38, 127, 1);
+    delay(5);
+  }
+  if (aButton == 0 and aButton != lastAButton) {
+    usbMIDI.sendNoteOff(38, 127, 1);
+    delay(5);
   }
   lastAButton = aButton;
 }
@@ -100,10 +107,17 @@ void checkAButton() {
 void checkBButton() {
   bButton = nunchuck1.values[13];
   if (bButton == 255 and bButton != lastBButton) {
-    Serial.println("B Button On");
+    usbMIDI.sendNoteOn(39, 127, 1);
+    delay(5);
+  }
+  if (bButton == 0 and bButton != lastBButton) {
+    usbMIDI.sendNoteOff(39, 127, 1);
+    delay(5);
   }
   lastBButton = bButton;
 }
+
+
 
 // values[0]=JoyXLeft
 // values[1]=JoyYLeft
